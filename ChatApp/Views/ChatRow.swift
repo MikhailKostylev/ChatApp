@@ -10,12 +10,14 @@ import SwiftUI
 struct ChatRow: View {
     
     let type: MessageType
+    let text: String
     
     var isSender: Bool {
         return type == .sent
     }
     
-    init(type: MessageType) {
+    init(text: String, type: MessageType) {
+        self.text = text
         self.type = type
     }
     
@@ -33,7 +35,7 @@ struct ChatRow: View {
             }
             
             HStack {
-                Text("Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World")
+                Text(text)
                     .foregroundColor(isSender ? Color.white : Color(.label))
                     .padding()
             }
@@ -49,9 +51,9 @@ struct ChatRow: View {
 struct ChatRow_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ChatRow(type: .sent)
+            ChatRow(text: "Hello, World!", type: .sent)
                 .preferredColorScheme(.dark)
-            ChatRow(type: .received)
+            ChatRow(text: "Hello, World!", type: .received)
                 .preferredColorScheme(.light)
         }
     }

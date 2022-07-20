@@ -32,8 +32,8 @@ struct SendButton: View {
     }
 }
 
-struct SendButton_Previews: PreviewProvider {
-    static var previews: some View {
-        SendButton()
-    }
-}
+//struct SendButton_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SendButton()
+//    }
+//}

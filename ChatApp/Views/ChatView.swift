@@ -10,13 +10,18 @@ import SwiftUI
 struct ChatView: View {
     
     @State var message: String = ""
+    let otherUserName: String
+    
+    init(otherUserName: String) {
+        self.otherUserName = otherUserName
+    }
     
     var body: some View {
         VStack {
             ScrollView(.vertical) {
-                ChatRow(type: .sent)
+                ChatRow(text: "Hello, World!", type: .sent)
                     .padding(3)
-                ChatRow(type: .received)
+                ChatRow(text: "Hello, World!", type: .received)
                     .padding(3)
             }
             
@@ -26,17 +31,17 @@ struct ChatView: View {
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(8)
                 
-                SendButton(text: $message )
+                SendButton(text: $message)
             }
             .padding()
         }
-        .navigationTitle("Bob")
+        .navigationTitle(otherUserName)
     }
 }
 
 struct ChatView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatView()
+        ChatView(otherUserName: "Bob")
             .preferredColorScheme(.dark)
     }
 }
