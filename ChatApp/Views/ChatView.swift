@@ -27,15 +27,22 @@ struct ChatView: View {
             
             HStack {
                 TextField("Message...", text: $message)
-                    .padding()
-                    .background(Color(.secondarySystemBackground))
-                    .cornerRadius(8)
+                    .modifier(CustomField())
                 
                 SendButton(text: $message)
             }
             .padding()
         }
         .navigationTitle(otherUserName)
+    }
+}
+
+struct CustomField: ViewModifier {
+    func body(content: Content) -> some View {
+       return content
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(8)
     }
 }
 

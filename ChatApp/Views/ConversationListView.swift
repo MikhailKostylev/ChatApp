@@ -11,6 +11,10 @@ struct ConversationListView: View {
     
     let usernames = ["Joe", "John", "Jack"]
     
+    @EnvironmentObject var model: AppStateModel
+    @State var otherUserName = ""
+    @State var showChat = false
+    
     var body: some View {
         NavigationView {
             ScrollView(.vertical) {
@@ -33,6 +37,14 @@ struct ConversationListView: View {
                         .padding()
                     }
                 }
+                
+                if !otherUserName.isEmpty {
+                    NavigationLink(
+                        "",
+                        destination: ChatView(otherUserName: otherUserName),
+                        isActive: $showChat
+                    )
+                }
             }
             .navigationTitle("Conversations")
             .toolbar {
@@ -44,11 +56,19 @@ struct ConversationListView: View {
                 
                 ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
                     NavigationLink {
-                        SearchView()
+                        SearchView { name in
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.otherUserName = name
+                                self.showChat = true
+                            }
+                        }
                     } label: {
                         Image(systemName: "magnifyingglass")
                     }
                 }
+            }
+            .fullScreenCover(isPresented: $model.showingSignIn) {
+                SignInView()
             }
         }
     }

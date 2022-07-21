@@ -12,6 +12,7 @@ struct ChatAppApp: App {
     var body: some Scene {
         WindowGroup {
             ConversationListView()
+                .environmentObject(AppStateModel())
         }
     }
 }
