@@ -10,7 +10,7 @@ import SwiftUI
 
 class AppStateModel: ObservableObject {
     
-    @Published var showingSignIn = false
+    @Published var showingSignIn = true
 }
 
 // Search
@@ -34,5 +34,7 @@ extension AppStateModel {
 // Sign In & Sign Up
 
 extension AppStateModel {
-    
+    func signIn(username: String, password: String) {
+        
+    }
 }

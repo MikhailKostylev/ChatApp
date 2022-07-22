@@ -8,8 +8,63 @@
 import SwiftUI
 
 struct SignInView: View {
+    
+    @EnvironmentObject var model: AppStateModel
+    @State var username = ""
+    @State var password = ""
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            VStack {
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 200, height: 120)
+                
+                Text("Chat App")
+                    .bold()
+                    .font(.system(size: 34))
+                
+                VStack {
+                    TextField("Username", text: $username)
+                        .modifier(CustomField())
+                    SecureField("Password", text: $password)
+                        .modifier(CustomField())
+                    Button {
+                        self.signIn()
+                    } label: {
+                        Text("Sign In")
+                            .foregroundColor(.white)
+                            .frame(width: 220, height: 50)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    }
+                    .padding(.vertical)
+                }
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                HStack {
+                    Text("Don't have an account?")
+                    NavigationLink("Sign Up") {
+                        SignUpView()
+                    }
+                    .foregroundColor(.blue)
+                }
+            }
+            .padding(.vertical)
+        }
+    }
+    
+    func signIn() {
+        guard !username.trimmingCharacters(in: .whitespaces).isEmpty,
+              !password.trimmingCharacters(in: .whitespaces).isEmpty,
+              password.count >= 6 else {
+            return
+        }
+        
+        model.signIn(username: username, password: password)
     }
 }
 
