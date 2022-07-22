@@ -9,9 +9,10 @@ import SwiftUI
 
 struct SignInView: View {
     
-    @EnvironmentObject var model: AppStateModel
     @State var username = ""
     @State var password = ""
+    
+    @EnvironmentObject var model: AppStateModel
     
     var body: some View {
         NavigationView {
@@ -19,7 +20,8 @@ struct SignInView: View {
                 Image("logo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 200, height: 120)
+                    .frame(width: 120, height: 120)
+                    .padding(.vertical)
                 
                 Text("Chat App")
                     .bold()
@@ -28,8 +30,10 @@ struct SignInView: View {
                 VStack {
                     TextField("Username", text: $username)
                         .modifier(CustomField())
+                    
                     SecureField("Password", text: $password)
                         .modifier(CustomField())
+                    
                     Button {
                         self.signIn()
                     } label: {
@@ -53,7 +57,6 @@ struct SignInView: View {
                     .foregroundColor(.blue)
                 }
             }
-            .padding(.vertical)
         }
     }
     
