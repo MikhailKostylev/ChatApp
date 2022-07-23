@@ -23,6 +23,10 @@ class AppStateModel: ObservableObject {
     let auth = Auth.auth()
     
     var otherUsername = ""
+    
+    init() {
+        showingSignIn = Auth.auth().currentUser == nil
+    }
 }
 
 // Search
@@ -61,14 +65,66 @@ extension AppStateModel {
 
 extension AppStateModel {
     func signIn(username: String, password: String) {
-        
+        // Get email from database
+        database.collection("users")
+            .document(username)
+            .getDocument { [weak self] snapshot, error in
+                guard let email = snapshot?.data()?["email"] as? String,
+                      error == nil else {
+                    return
+                }
+                
+                // Try to sign in
+                self?.auth.signIn(withEmail: email, password: password) { result, error in
+                    guard result != nil, error == nil else {
+                        return
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self?.currentEmail = email
+                        self?.currentUsername = username
+                        self?.showingSignIn = false
+                    }
+                }
+            }
     }
     
     func signUp(email: String, username: String, password: String) {
-        
+        // Create Account
+        auth.createUser(withEmail: email, password: password) { [weak self] result, error in
+            guard result != nil, error == nil else {
+                return
+            }
+            
+            // Insert user to database
+            let data = [
+                "email" : email,
+                "username" : username
+            ]
+            
+            self?.database
+                .collection("users")
+                .document(username)
+                .setData(data) { error in
+                    guard error == nil else {
+                        return
+                    }
+                    
+                    DispatchQueue.main.async {
+                        self?.currentUsername = username
+                        self?.currentEmail = email
+                        self?.showingSignIn = false
+                    }
+                }
+        }
     }
     
     func signOut() {
-        
+        do {
+            try auth.signOut()
+            self.showingSignIn = true
+        } catch {
+            print(error)
+        }
     }
 }

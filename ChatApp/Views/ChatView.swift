@@ -43,6 +43,8 @@ struct CustomField: ViewModifier {
             .padding()
             .background(Color(.secondarySystemBackground))
             .cornerRadius(8)
+            .autocapitalization(.none)
+            .disableAutocorrection(true)
     }
 }
 
