@@ -12,6 +12,7 @@ struct ConversationListView: View {
     @EnvironmentObject var model: AppStateModel
     @State var otherUserName = ""
     @State var showChat = false
+    @State var showSearch = false
     
     var body: some View {
         NavigationView {
@@ -53,11 +54,12 @@ struct ConversationListView: View {
                 }
                 
                 ToolbarItem(placement: ToolbarItemPlacement.navigationBarTrailing) {
-                    NavigationLink {
+                    NavigationLink(isActive: $showSearch) {
                         SearchView { name in
+                            self.showSearch = false
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.otherUserName = name
                                 self.showChat = true
+                                self.otherUserName = name
                             }
                         }
                     } label: {
