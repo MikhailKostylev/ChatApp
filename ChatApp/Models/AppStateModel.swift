@@ -16,13 +16,14 @@ class AppStateModel: ObservableObject {
     @AppStorage("currentEmail") var currentEmail = ""
     
     @Published var showingSignIn = true
-    @Published var conversation: [String] = []
+    @Published var conversations: [String] = []
     @Published var messages: [Message] = []
     
     let database = Firestore.firestore()
     let auth = Auth.auth()
     
     var otherUsername = ""
+    var conversationListener: ListenerRegistration?
     
     init() {
         showingSignIn = Auth.auth().currentUser == nil
@@ -33,7 +34,20 @@ class AppStateModel: ObservableObject {
 
 extension AppStateModel {
     func searchUsers(query: String, completion: @escaping ([String]) -> Void) {
-        
+        database.collection("users")
+            .getDocuments { snapshot, error in
+                guard let usernames = snapshot?.documents.compactMap({ $0.documentID }),
+                      error == nil else {
+                    completion([])
+                    return
+                }
+                
+                let filtered = usernames.filter {
+                    $0.lowercased().hasPrefix(query.lowercased())
+                }
+                
+                completion(filtered)
+            }
     }
 }
 
@@ -41,7 +55,21 @@ extension AppStateModel {
 
 extension AppStateModel {
     func getConversations() {
+        // Listen for conversations
         
+        conversationListener = database
+            .collection("users")
+            .document(currentUsername)
+            .collection("chats").addSnapshotListener { [weak self] snapshot, error in
+                guard let usernames = snapshot?.documents.compactMap({ $0.documentID }),
+                      error == nil else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self?.conversations = usernames
+                }
+            }
     }
 }
 
