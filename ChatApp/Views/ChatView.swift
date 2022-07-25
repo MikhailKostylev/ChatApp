@@ -22,7 +22,8 @@ struct ChatView: View {
         VStack {
             ScrollView(.vertical) {
                 ForEach(model.messages, id: \.self) { message in
-                    ChatRow(text: "Hello, World!", type: .sent)
+                    ChatRow(text: message.text,
+                            type: message.type)
                         .padding(3)
                 }
             }
